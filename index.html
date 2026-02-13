@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geoportal UEFSA - Siembra y Cosecha de Agua</title>
+
+  <!-- Favicon: pon tu logo SA aquí -->
+  <link rel="icon" href="favicon/sa.png" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div class="layout">
+    <!-- PANEL IZQUIERDO -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-title">UNIDAD EJECUTORA FONDO SIERRA AZUL - U.E.F.S.A</div>
+        <div class="brand-subtitle">“Siembra y Cosecha de Agua”</div>
+      </div>
+
+      <!-- LIMITES POLITICOS -->
+      <details class="block" open>
+        <summary class="block-title">Límites políticos</summary>
+
+        <div class="form-row">
+  <label>Región</label>
+  <input list="listaRegiones" id="txtRegion" placeholder="Escribe Región..." />
+  <datalist id="listaRegiones"></datalist>
+  </div>
+        <div class="form-row">
+          <label for="txtProvincia">Provincia</label>
+          <input list="listaProvincias" id="txtProvincia" placeholder="Escribe Provincia..." />
+          <datalist id="listaProvincias"></datalist>
+        </div>
+
+        <div class="form-row">
+          <label for="txtDistrito">Distrito</label>
+          <input list="listaDistritos" id="txtDistrito" placeholder="Escribe Distrito..." />
+          <datalist id="listaDistritos"></datalist>
+        </div>
+
+        <button id="btnBuscar" type="button" class="btn-wide">
+          Buscar (Zoom al distrito + capas marcadas)
+        </button>
+
+        <div id="msg" class="msg"></div>
+      </details>
+
+      <!-- FTA (por ahora solo ANP y ZA como pediste) -->
+      <details class="block" open>
+        <summary class="block-title">Ficha Técnica Ambiental (FTA)</summary>
+
+        <div class="checks">
+          <label><input type="checkbox" data-layer="anp"> ANPs</label>
+          <label><input type="checkbox" data-layer="za"> ZA (Zona de Amortiguamiento)</label>
+        </div>
+      </details>
+
+      <!-- CIRA (por ahora vacío, luego lo llenamos) -->
+      <details class="block">
+        <summary class="block-title">CIRA</summary>
+        <div class="hint">Luego subimos capas de CIRA poco a poco.</div>
+      </details>
+
+      <div class="footer-note">SA</div>
+    </aside>
+
+    <!-- MAPA -->
+    <main class="mapwrap">
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

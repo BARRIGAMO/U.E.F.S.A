@@ -1,0 +1,119 @@
+:root{
+  --border:#e5e7eb;
+  --muted:#6b7280;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; font-family: Arial, Helvetica, sans-serif; }
+
+.layout{ height:100%; display:flex; }
+
+.sidebar{
+  width: 360px;
+  background: #fff;
+  border-right: 1px solid var(--border);
+  padding: 14px;
+  overflow:auto;
+}
+
+.brand{
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+}
+
+.brand-title{
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.brand-subtitle{
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color:#111827;
+}
+
+.block{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.block-title{
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 14px;
+  list-style: none;
+}
+.block summary::-webkit-details-marker{ display:none; }
+
+.form-row{ margin-top: 10px; }
+label{ display:block; font-weight: 800; font-size: 12px; margin-bottom: 6px; }
+
+input[type="text"]{
+  width:100%;
+  padding: 9px 10px;
+  border:1px solid var(--border);
+  border-radius: 12px;
+  outline:none;
+}
+
+.btn-wide{
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 10px;
+  border: 1px solid var(--border);
+  background:#111827;
+  color:#fff;
+  border-radius: 12px;
+  cursor:pointer;
+  font-weight: 800;
+}
+.btn-wide:hover{ filter: brightness(.95); }
+
+.checks{
+  margin-top: 10px;
+  display:grid;
+  gap: 8px;
+}
+.checks label{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  margin: 0;
+}
+
+.hint{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.msg{
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  font-size: 12px;
+  min-height: 18px;
+  color:#111827;
+}
+
+.mapwrap{ flex:1; }
+#map{ height:100%; width:100%; }
+
+.footer-note{
+  margin-top: 12px;
+  text-align:center;
+  font-weight: 900;
+  opacity: .35;
+}
