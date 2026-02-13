@@ -106,15 +106,20 @@ async function loadLayer(key){
 // =========================
 // ACTIVAR CAPAS MARCADAS (FTA)
 // =========================
-async function activarCapasMarcadas(){
+async function syncCapasMarcadas(){
   const checks = Array.from(document.querySelectorAll('input[type="checkbox"][data-layer]'));
-  const keys = checks.filter(c => c.checked).map(c => c.getAttribute('data-layer'));
-  for (const k of keys){
+
+  for (const c of checks){
+    const k = c.getAttribute('data-layer');
     const lyr = await loadLayer(k);
-    if (!map.hasLayer(lyr)) lyr.addTo(map);
+
+    if (c.checked){
+      if (!map.hasLayer(lyr)) lyr.addTo(map);
+    } else {
+      if (map.hasLayer(lyr)) map.removeLayer(lyr);
+    }
   }
 }
-
 // =========================
 // BUSCAR DISTRITO
 // =========================
@@ -131,39 +136,54 @@ async function buscarZoomDistrito(){
   const distLayer = await loadLayer('distritos');
   let found = null;
 
+  // 1) BUSCAR el distrito
   distLayer.eachLayer(lyr => {
     if (found) return;
-    const p = lyr.feature?.properties || {};
 
-    const d = norm(p.DISTRITO);
-    const r = norm(p.NOMDEP);
-    const pr = norm(p.PROVINCIA);
+    const p = lyr.feature?.properties || {};
+    const d  = norm(p.DISTRITO);
+
+    // si existen campos extra, los usa; si no existen, NO bloquea
+    const hasReg  = Object.prototype.hasOwnProperty.call(p, 'NOMDEP');
+    const hasProv = Object.prototype.hasOwnProperty.call(p, 'PROVINCIA');
+
+    const r  = norm(hasReg  ? p.NOMDEP    : '');
+    const pr = norm(hasProv ? p.PROVINCIA : '');
 
     const okDist = d && d.includes(distTxt);
-    const okReg  = regionTxt ? (r && r.includes(regionTxt)) : true;
-    const okProv = provTxt   ? (pr && pr.includes(provTxt)) : true;
+    const okReg  = regionTxt ? (hasReg  ? r.includes(regionTxt)  : true) : true;
+    const okProv = provTxt   ? (hasProv ? pr.includes(provTxt)   : true) : true;
 
     if (okDist && okReg && okProv) found = lyr;
   });
 
   if (!found){
-    setMsg('No encontré el distrito con esos filtros.');
+    setMsg('No encontré el distrito. Prueba SOLO con el nombre del distrito (sin región/provincia) o revisa tildes.');
     return;
   }
 
+  // 2) LIMPIAR resaltado anterior
   clearHighlight();
 
+  // 3) RESALTAR + ETIQUETA
   highlightLayer = L.geoJSON(found.feature, {
-    style: { weight: 4, color: '#ff6b00', fillOpacity: 0.08 },
+    style: { weight: 4, color: '#ff6b00', fillOpacity: 0.10 },
     onEachFeature: (f, lyr) => {
       const nombre = f.properties?.DISTRITO ?? 'Distrito';
-      lyr.bindTooltip(nombre, { permanent:true, direction:'center', className:'admin-label' }).openTooltip();
+      lyr.bindTooltip(nombre, {
+        permanent: true,
+        direction: 'center',
+        className: 'admin-label'
+      }).openTooltip();
     }
   }).addTo(map);
 
+  // 4) ZOOM SIEMPRE
   map.fitBounds(highlightLayer.getBounds(), { padding: [30, 30] });
-  setMsg(`✅ Distrito resaltado: ${found.feature.properties?.DISTRITO ?? ''}`);
+
+  setMsg(`✅ Distrito: ${found.feature?.properties?.DISTRITO ?? ''}`);
 }
+
 
 // Tooltip style
 const style = document.createElement('style');
@@ -249,7 +269,7 @@ document.getElementById('btnBuscar').addEventListener('click', async () => {
   try{
     setMsg('Buscando distrito y cargando capas...');
     await buscarZoomDistrito();
-    await activarCapasMarcadas();
+    await syncCapasMarcadas();
   }catch(err){
     console.error(err);
     setMsg(`Error: ${err.message}`);
@@ -259,3 +279,9 @@ document.getElementById('btnBuscar').addEventListener('click', async () => {
 window.addEventListener('load', () => {
   cargarAutocomplete();
 });
+document.querySelectorAll('input[type="checkbox"][data-layer]').forEach(chk => {
+  chk.addEventListener('change', () => {
+    syncCapasMarcadas().catch(err => setMsg(`Error capas: ${err.message}`));
+  });
+});
+
