@@ -147,7 +147,7 @@ async function buscarZoomDistrito(){
     const hasReg  = Object.prototype.hasOwnProperty.call(p, 'NOMDEP');
     const hasProv = Object.prototype.hasOwnProperty.call(p, 'PROVINCIA');
 
-    const r  = norm(hasReg  ? p.NOMDEP    : '');
+    const r  = norm(hasReg  ? p.NOMBDEP    : '');
     const pr = norm(hasProv ? p.PROVINCIA : '');
 
     const okDist = d && d.includes(distTxt);
@@ -211,7 +211,7 @@ async function cargarAutocomplete(){
     const dlReg = document.getElementById('listaRegiones');
     const regiones = new Set();
     regLayer.eachLayer(l => {
-      const n = l.feature?.properties?.NOMDEP;
+      const n = l.feature?.properties?.NOMBDEP;
       if (n) regiones.add(n);
     });
     if (dlReg){
@@ -284,4 +284,5 @@ document.querySelectorAll('input[type="checkbox"][data-layer]').forEach(chk => {
     syncCapasMarcadas().catch(err => setMsg(`Error capas: ${err.message}`));
   });
 });
+
 
