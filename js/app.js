@@ -144,7 +144,7 @@ async function buscarZoomDistrito(){
     const d  = norm(p.DISTRITO);
 
     // si existen campos extra, los usa; si no existen, NO bloquea
-    const hasReg  = Object.prototype.hasOwnProperty.call(p, 'NOMDEP');
+    const hasReg  = Object.prototype.hasOwnProperty.call(p, 'NOMBDEP');
     const hasProv = Object.prototype.hasOwnProperty.call(p, 'PROVINCIA');
 
     const r  = norm(hasReg  ? p.NOMBDEP    : '');
@@ -284,5 +284,6 @@ document.querySelectorAll('input[type="checkbox"][data-layer]').forEach(chk => {
     syncCapasMarcadas().catch(err => setMsg(`Error capas: ${err.message}`));
   });
 });
+
 
 
